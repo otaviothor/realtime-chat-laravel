@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="84be8748-18a4-4606-b64e-8a3401363e1c" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -140,8 +143,20 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="Laravel.SettingsForm" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/js/Pages" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.editor" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/js/Pages" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -157,7 +172,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605222045321</updated>
-      <workItem from="1605222046916" duration="57000" />
+      <workItem from="1605222046916" duration="4775000" />
     </task>
     <servers />
   </component>
@@ -169,13 +184,13 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="469" y="266" width="417" height="228" key="#Composer/0.0.1366.768@0.0.1366.768" timestamp="1605222102833" />
-    <state x="217" y="18" key="SettingsEditor" timestamp="1605222060790">
+    <state x="217" y="18" key="SettingsEditor" timestamp="1605231030267">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="217" y="18" key="SettingsEditor/0.0.1366.768@0.0.1366.768" timestamp="1605222060790" />
-    <state x="346" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1605222094110">
+    <state x="217" y="18" key="SettingsEditor/0.0.1366.768@0.0.1366.768" timestamp="1605231030267" />
+    <state x="346" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1605230355093">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="346" y="89" width="672" height="678" key="search.everywhere.popup/0.0.1366.768@0.0.1366.768" timestamp="1605222094110" />
+    <state x="346" y="89" width="672" height="678" key="search.everywhere.popup/0.0.1366.768@0.0.1366.768" timestamp="1605230355093" />
   </component>
 </project>
