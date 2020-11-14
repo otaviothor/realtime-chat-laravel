@@ -7,16 +7,6 @@ A realtime chat application using the Laravel 8, Jetstream, Sanctum, Inertia.js 
 <p/>
 
 # Start project
-Run commands:
-
-- ```composer install``` 
-- ```npm install```
-- ```php artisan migrate```
-- ```php artisan serve```
-- ```npm run dev```
-- ```php artisan websocket:serve```
-
-# Start project
 
 First, you need to create a file at the root of the project with the name .env and copy the contents of the .env.example file. Then you must create a database with the name you want and configure the connection in the file mentioned above.
 After that, run commands:
