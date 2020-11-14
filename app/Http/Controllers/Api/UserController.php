@@ -10,11 +10,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+    public function me()
+    {
+        $userLogged = Auth::user();
+
+        return response()->json([
+            'user' => $userLogged
+        ], Response::HTTP_OK);
+    }
+
     public function index()
     {
         $userLogged = Auth::user();
-//        $users = User::where('id', '!=', $userLogged->id)->get();
-        $users = User::where('id', '!=', 1)->get();
+        $users = User::where('id', '!=', $userLogged->id)->get();
 
         return response()->json([
             'users' => $users

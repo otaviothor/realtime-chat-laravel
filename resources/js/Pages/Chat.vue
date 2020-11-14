@@ -20,7 +20,9 @@
                                 class="p-6 text-lg text-gray-600 leading-7 font-semibold border-b border-gray-200 hover:bg-gray-200 hover:bg-opacity-50 hover:cursor-pointer">
                                 <p class="flex">
                                     {{ user.name }}
-                                    <span class="ml-2 w-2 h-2 bg-blue-300 rounded-full"></span>
+                                    <span
+                                        v-if="user.notification"
+                                        class="ml-2 w-2 h-2 bg-blue-300 rounded-full"></span>
                                 </p>
                             </li>
                         </ul>
@@ -70,7 +72,9 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import Vue from 'vue';
+    import AppLayout from '@/Layouts/AppLayout';
+    import store from "../store";
 
     export default {
         components: {
@@ -82,6 +86,11 @@
                 messages: [],
                 userActive: null,
                 message: ''
+            }
+        },
+        computed: {
+            user() {
+                return store.state.user
             }
         },
         methods: {
@@ -99,6 +108,17 @@
                     .then(response => {
                         this.messages = response.data.messages
                     });
+
+                const user = this.users.filter((user) => {
+                    if (user.id === userId) {
+                        return user;
+                    }
+                })
+
+                if (user) {
+                    Vue.set(user[0], 'notification', false);
+                }
+
                 this.scrollToButton();
             },
             sendMessage: async function () {
@@ -108,7 +128,7 @@
                 })
                     .then(response => {
                         this.messages.push({
-                            'from': 1,
+                            'from': this.user.id,
                             'to': this.userActive.id,
                             'content': this.message,
                             'created_at': new Date().toISOString(),
@@ -119,9 +139,26 @@
                 this.scrollToButton();
             }
         },
-        async mounted() {
-            const {data} = await axios.get('api/users');
-            this.users = data.users;
+        mounted() {
+            axios.get('api/users')
+                .then(response => this.users = response.data.users);
+
+            Echo.private(`user.${this.user.id}`).listen('.SendMessage', async (e) => {
+                if (this.userActive && this.userActive.id === e.message.from) {
+                    await this.messages.push(e.message);
+                    this.scrollToButton();
+                } else {
+                    const user = this.users.filter((user) => {
+                        if (user.id === e.message.from) {
+                            return user;
+                        }
+                    })
+
+                    if (user) {
+                        Vue.set(user[0], 'notification', true);
+                    }
+                }
+            })
         }
     }
 </script>

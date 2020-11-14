@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Chat\SendMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,8 +15,7 @@ class MessageController extends Controller
 {
     public function listMessages(User $user)
     {
-//        $userFrom = Auth::user();
-        $userFrom = 1;
+        $userFrom = Auth::user();
         $userTo = $user->id;
 
         $messages = Message::where(
@@ -58,11 +59,12 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         $message = new Message();
-        $message->from = 1;
-//        $message->from = Auth::user()->id;
+        $message->from = Auth::user()->id;
         $message->to = $request->to;
         $message->content = filter_var($request->content, FILTER_SANITIZE_STRIPPED);
         $message->save();
+
+        Event::dispatch(new SendMessage($message, $request->to));
     }
 
     /**
