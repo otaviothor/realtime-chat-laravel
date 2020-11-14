@@ -12,15 +12,14 @@
                     <!-- list user -->
                     <div class="w-3/12 bg-gray-200 bg-opacity-25 border-r border-gray-200 overflow-y-auto">
                         <ul>
-                            <li class="p-6 text-lg text-gray-600 leading-7 font-semibold border-b border-gray-200 hover:bg-gray-200 hover:bg-opacity-50 hover:cursor-pointer">
+                            <li
+                                v-for="user in users"
+                                :key="user.id"
+                                :class="(userActive && userActive.id === user.id) ? 'bg-gray-200 bg-opacity-50' : ''"
+                                @click="() => loadMessage(user.id)"
+                                class="p-6 text-lg text-gray-600 leading-7 font-semibold border-b border-gray-200 hover:bg-gray-200 hover:bg-opacity-50 hover:cursor-pointer">
                                 <p class="flex">
-                                    Otávio Barreto
-                                    <span class="ml-2 w-2 h-2 bg-blue-300 rounded-full"></span>
-                                </p>
-                            </li>
-                            <li class="p-6 text-lg text-gray-600 leading-7 font-semibold border-b border-gray-200 hover:bg-gray-200 hover:bg-opacity-50 hover:cursor-pointer">
-                                <p class="flex">
-                                    Helen Alves
+                                    {{ user.name }}
                                     <span class="ml-2 w-2 h-2 bg-blue-300 rounded-full"></span>
                                 </p>
                             </li>
@@ -30,29 +29,36 @@
                     <!-- box message -->
                     <div class="w-9/12 flex flex-col justify-between">
                         <div class="w-full p-6 flex flex-col overflow-y-auto">
-                            <div class="w-full mb-3 text-right">
-                                <p class="inline-block p-2 rounded-md messageFromMe" style="max-width: 75%;">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            <div
+                                v-for="message in messages"
+                                :class="(message.from === $page.auth.user.id) ? 'text-right' : ''"
+                                :key="message.id"
+                                class="w-full mb-3 message">
+                                <p
+                                    :class="(message.from === $page.auth.user.id) ? 'messageFromMe' : 'messageToMe'"
+                                    class="inline-block p-2 rounded-md messageFromMe" style="max-width: 75%;">
+                                    {{message.content}}
                                 </p>
                                 <span class="block mt-1 text-xs text-gray-500">
-                                    21/10/2020 - 17h44
-                                </span>
-                            </div>
-                            <div class="w-full mb-3 text-left">
-                                <p class="inline-block p-2 rounded-md messageToMe" style="max-width: 75%;">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                </p>
-                                <span class="block mt-1 text-xs text-gray-500">
-                                    21/10/2020 - 17h44
+                                    {{message.created_at | formatDate}}
                                 </span>
                             </div>
                         </div>
 
-                        <div class="w-full bg-gray-200 bg-opacity-25 p-6 border-t border-gray-200">
-                            <form>
+                        <div
+                            v-if="userActive"
+                            class="w-full bg-gray-200 bg-opacity-25 p-6 border-t border-gray-200">
+                            <form
+                                v-on:submit.prevent="sendMessage"
+                            >
                                 <div class="flex rounded-md overflow-hidden border border-gray-300">
-                                    <input type="text" class="flex-1 px-4 py-2 text-sm focus:outline-none">
-                                <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2">Enviar</button>
+                                    <input
+                                        v-model="message"
+                                        type="text"
+                                        class="flex-1 px-4 py-2 text-sm focus:outline-none">
+                                    <button
+                                        type="submit"
+                                        class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 focus:outline-none">Enviar</button>
                                 </div>
                             </form>
                         </div>
@@ -70,6 +76,53 @@
         components: {
             AppLayout
         },
+        data() {
+            return {
+                users: [],
+                messages: [],
+                userActive: null,
+                message: ''
+            }
+        },
+        methods: {
+            scrollToButton: function () {
+                if (this.messages.length) {
+                    document.querySelectorAll('.message:last-child')[0].scrollIntoView();
+                }
+            },
+            loadMessage: async function (userId) {
+                await axios.get(`/api/users/${userId}`)
+                    .then(response => {
+                        this.userActive = response.data.user
+                    });
+                await axios.get(`/api/messages/${userId}`)
+                    .then(response => {
+                        this.messages = response.data.messages
+                    });
+                this.scrollToButton();
+            },
+            sendMessage: async function () {
+                await axios.post('api/messages/store', {
+                    'content': this.message,
+                    'to': this.userActive.id
+                })
+                    .then(response => {
+                        this.messages.push({
+                            'from': 1,
+                            'to': this.userActive.id,
+                            'content': this.message,
+                            'created_at': new Date().toISOString(),
+                            'updated_at': new Date().toISOString()
+                        });
+                        this.message = '';
+                    });
+                this.scrollToButton();
+            }
+        },
+        async mounted() {
+            const {data} = await axios.get('api/users');
+            this.users = data.users;
+        }
     }
 </script>
 
